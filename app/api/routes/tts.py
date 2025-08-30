@@ -115,6 +115,29 @@ async def convert_multiple_texts(
 
 
 @router.get(
+    "/supported-languages",
+    response_model=list[str],
+    summary="Get supported languages",
+    description="Get list of supported languages for TTS conversion.",
+    responses={
+        200: {"description": "Supported languages retrieved successfully"},
+        500: {"model": ErrorResponse, "description": "Internal server error"},
+    },
+)
+async def get_supported_languages(
+        tts_engine_mgr: TTSEngineManager = Depends(get_tts_engine_manager),
+):
+    """Get list of supported languages for TTS conversion."""
+    try:
+        return tts_engine_mgr.get_supported_languages()
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get supported languages: {str(e)}",
+        )
+
+
+@router.get(
     "/{conversion_id}",
     response_model=TTSTaskResponse,
     summary="Get TTS conversion status",
@@ -302,27 +325,4 @@ async def download_audio_file(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to download audio file: {str(e)}",
-        )
-
-
-@router.get(
-    "/supported-languages",
-    response_model=list[str],
-    summary="Get supported languages",
-    description="Get list of supported languages for TTS conversion.",
-    responses={
-        200: {"description": "Supported languages retrieved successfully"},
-        500: {"model": ErrorResponse, "description": "Internal server error"},
-    },
-)
-async def get_supported_languages(
-        tts_engine_mgr: TTSEngineManager = Depends(get_tts_engine_manager),
-):
-    """Get list of supported languages for TTS conversion."""
-    try:
-        return tts_engine_mgr.get_supported_languages()
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get supported languages: {str(e)}",
         )
