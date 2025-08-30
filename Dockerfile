@@ -1,11 +1,11 @@
-# Multi-stage build for Last Whisper Backend
+# Multi-stage build for Last Whisper TTS Service
 FROM python:3.12-slim AS base
 
 # Set default environment variables
 ENV ENVIRONMENT=production \
-    TTS_PROVIDER=local \
+    TTS_PROVIDER=gcp \
     LOG_LEVEL=info \
-    CORS_ORIGINS=http://localhost:8008 \
+    CORS_ORIGINS=http://localhost:3000 \
     HF_HOME=/app/.cache/huggingface
 
 # Install system dependencies
