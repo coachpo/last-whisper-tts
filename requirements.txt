@@ -1,0 +1,18 @@
+accelerate~=1.10.1
+alembic~=1.16.5
+black~=25.1.0
+fastapi~=0.116.1
+google-cloud-texttospeech~=2.27.0
+httpx~=0.28.1
+# jiwer removed - not needed for TTS-only functionality
+pydantic~=2.11.7
+pydantic-settings~=2.10.1
+pytest~=8.4.1
+ruff~=0.12.11
+scipy~=1.16.1
+sqlalchemy~=2.0.43
+torch~=2.8.0
+transformers~=4.55.4
+# unidecode removed - not needed for TTS-only functionality
+uvicorn[standard]~=0.35.0
+azure-cognitiveservices-speech~=1.45.0
