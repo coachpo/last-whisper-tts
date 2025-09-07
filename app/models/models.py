@@ -4,9 +4,7 @@ import json
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text, Index
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+from sqlalchemy import Column, DateTime, Integer, String, Text
 
 # Import Base from database_manager to avoid circular imports
 from .database_manager import Base

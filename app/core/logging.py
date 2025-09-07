@@ -7,15 +7,17 @@ from typing import Optional
 from app.core.config import settings
 
 
-def setup_logging(log_level: str = None, log_file: Optional[str] = None) -> logging.Logger:
+def setup_logging(
+    log_level: str = None, log_file: Optional[str] = None
+) -> logging.Logger:
     """Configure logging for the application."""
     if log_level is None:
         log_level = settings.log_level
 
     # Create a custom formatter for consistent alignment
     formatter = logging.Formatter(
-        fmt='%(asctime)s - %(name)-25s - %(levelname)-8s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S,%f'[:-3]  # Format: YYYY-MM-DD HH:MM:SS,mmm
+        fmt="%(asctime)s - %(name)-25s - %(levelname)-8s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S,%f"[:-3],  # Format: YYYY-MM-DD HH:MM:SS,mmm
     )
 
     # Configure root logger

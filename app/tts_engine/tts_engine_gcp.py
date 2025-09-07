@@ -65,18 +65,18 @@ class TTSEngine:
     """
 
     def __init__(
-            self,
-            voice_name: str = "fi-FI-Wavenet-B",
-            # default if you call synth directly, but normally we randomize at submitting
-            language_code: str = "fi-FI",
-            sample_rate_hz: int = 24000,
-            speaking_rate: float = 1.0,
-            pitch: float = 0.0,
-            volume_gain_db: float = 0.0,
-            use_ssml: bool = False,
-            max_chars_per_request: int = 4500,  # stay safely under API limits
-            voice_pool=None,  # optional custom pool override
-            device=None,  # for API compatibility (not used for GCP)
+        self,
+        voice_name: str = "fi-FI-Wavenet-B",
+        # default if you call synth directly, but normally we randomize at submitting
+        language_code: str = "fi-FI",
+        sample_rate_hz: int = 24000,
+        speaking_rate: float = 1.0,
+        pitch: float = 0.0,
+        volume_gain_db: float = 0.0,
+        use_ssml: bool = False,
+        max_chars_per_request: int = 4500,  # stay safely under API limits
+        voice_pool=None,  # optional custom pool override
+        device=None,  # for API compatibility (not used for GCP)
     ):
         logger.info("TTS engine: Initializing Google Cloud Text-to-Speech client...")
 
@@ -94,12 +94,14 @@ class TTSEngine:
         self.volume_gain_db = volume_gain_db
         self.use_ssml = use_ssml
         self.max_chars_per_request = max_chars_per_request
-        
+
         # Device field for API compatibility (not used for GCP API)
         self.device = device or "google-tts-api"
 
         # Pool of Finnish neural voices we randomize from
-        self.voice_pool = list(voice_pool) if voice_pool else list(DEFAULT_FI_VOICE_POOL)
+        self.voice_pool = (
+            list(voice_pool) if voice_pool else list(DEFAULT_FI_VOICE_POOL)
+        )
 
         # Queues & worker lifecycle
         self.request_queue = queue.Queue()
@@ -127,7 +129,9 @@ class TTSEngine:
         """Start the TTS service worker thread"""
         if not self.is_running:
             self.is_running = True
-            self.worker_thread = threading.Thread(target=self._process_queue, daemon=True)
+            self.worker_thread = threading.Thread(
+                target=self._process_queue, daemon=True
+            )
             self.worker_thread.start()
             logger.info("TTS engine: Service started successfully!")
 
@@ -214,7 +218,9 @@ class TTSEngine:
 
     def switch_device(self, new_device):
         """Not applicable; present for interface compatibility."""
-        logger.info(f"TTS engine: switch_device requested ({new_device}) — ignored for API backend.")
+        logger.info(
+            f"TTS engine: switch_device requested ({new_device}) — ignored for API backend."
+        )
         return False
 
     # ----------------------- Internal helpers -----------------------
@@ -222,11 +228,17 @@ class TTSEngine:
     def _configure_google_credentials(self):
         """Configure Google Cloud credentials from pydantic settings."""
         if getattr(settings, "google_application_credentials", None):
-            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = settings.google_application_credentials
-            logger.info(f"TTS engine: Using Google credentials from {settings.google_application_credentials}")
+            os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = (
+                settings.google_application_credentials
+            )
+            logger.info(
+                f"TTS engine: Using Google credentials from {settings.google_application_credentials}"
+            )
         else:
             if os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
-                logger.info("TTS engine: Using existing GOOGLE_APPLICATION_CREDENTIALS from environment")
+                logger.info(
+                    "TTS engine: Using existing GOOGLE_APPLICATION_CREDENTIALS from environment"
+                )
             else:
                 logger.warning(
                     "TTS engine: No Google credentials configured. "
@@ -280,7 +292,9 @@ class TTSEngine:
 
             # Synthesize audio as WAV (LINEAR16 PCM) and write to file
             total_frames = self._synthesize_to_wav(
-                text=request["text"], wav_path=request["filename"], voice_name=voice_name
+                text=request["text"],
+                wav_path=request["filename"],
+                voice_name=voice_name,
             )
 
             request["status"] = TaskStatus.COMPLETED
@@ -302,8 +316,12 @@ class TTSEngine:
                 "voice": voice_name,
                 "device": self.device,
             }
-            self._publish_task_message(request["id"], request["filename"], TaskStatus.COMPLETED, **meta)
-            self._publish_task_message(request["id"], request["filename"], TaskStatus.DONE, **meta)
+            self._publish_task_message(
+                request["id"], request["filename"], TaskStatus.COMPLETED, **meta
+            )
+            self._publish_task_message(
+                request["id"], request["filename"], TaskStatus.DONE, **meta
+            )
 
             logger.info(
                 f"TTS engine: Request {request['id']} completed! Saved: {request['filename']}"
@@ -397,7 +415,9 @@ class TTSEngine:
         chunks, current = [], []
         length = 0
         for token in text.split():
-            add_len = len(token) + (1 if current else 0)  # +1 for space when joined (except first)
+            add_len = len(token) + (
+                1 if current else 0
+            )  # +1 for space when joined (except first)
             if length + add_len > max_chars:
                 chunks.append(" ".join(current))
                 current = [token]

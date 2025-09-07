@@ -55,7 +55,9 @@ class TTSEngine:
         """Start the TTS service worker thread"""
         if not self.is_running:
             self.is_running = True
-            self.worker_thread = threading.Thread(target=self._process_queue, daemon=True)
+            self.worker_thread = threading.Thread(
+                target=self._process_queue, daemon=True
+            )
             self.worker_thread.start()
             logger.info("TTS engine: Service started successfully!")
 
@@ -76,7 +78,8 @@ class TTSEngine:
         # Validate language support
         if language not in settings.tts_supported_languages:
             logger.error(
-                f"Error: Language '{language}' is not supported. Supported languages: {settings.tts_supported_languages}")
+                f"Error: Language '{language}' is not supported. Supported languages: {settings.tts_supported_languages}"
+            )
             return None
 
         # Generate filename based on timestamp and text hash
@@ -105,9 +108,13 @@ class TTSEngine:
         self.request_queue.put_nowait(request)
 
         # Publish initial task message to external queue
-        self._publish_task_message(request_id, filename, "queued", text=text, language=language)
+        self._publish_task_message(
+            request_id, filename, "queued", text=text, language=language
+        )
 
-        logger.info(f"TTS engine: Request {request_id} submitted and queued. Output file: {filename}")
+        logger.info(
+            f"TTS engine: Request {request_id} submitted and queued. Output file: {filename}"
+        )
         return request_id
 
     def _publish_task_message(self, request_id, output_file_path, status, **metadata):
@@ -137,7 +144,9 @@ class TTSEngine:
     def _process_request(self, request):
         """Process a single TTS request"""
         try:
-            logger.info(f"TTS engine: Processing request {request['id']} on {self.device}...")
+            logger.info(
+                f"TTS engine: Processing request {request['id']} on {self.device}..."
+            )
             request["status"] = TaskStatus.PROCESSING
 
             # Publish processing status
@@ -163,7 +172,9 @@ class TTSEngine:
 
             # Save audio file
             scipy.io.wavfile.write(
-                request["filename"], rate=self.model.config.sampling_rate, data=audio_data
+                request["filename"],
+                rate=self.model.config.sampling_rate,
+                data=audio_data,
             )
 
             request["status"] = TaskStatus.COMPLETED
@@ -204,7 +215,8 @@ class TTSEngine:
             )
 
             logger.info(
-                f"TTS engine: Request {request['id']} completed successfully! Audio saved as: {request['filename']}")
+                f"TTS engine: Request {request['id']} completed successfully! Audio saved as: {request['filename']}"
+            )
 
         except Exception as e:
             request["status"] = TaskStatus.FAILED
@@ -257,7 +269,9 @@ class TTSEngine:
             old_device = self.device
             self.device = torch.device(new_device)
             self.model = self.model.to(self.device)
-            logger.info(f"TTS engine: Successfully switched from {old_device} to {self.device}")
+            logger.info(
+                f"TTS engine: Successfully switched from {old_device} to {self.device}"
+            )
             return True
         except Exception as e:
             logger.error(f"Failed to switch to {new_device}: {e}")

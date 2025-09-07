@@ -6,7 +6,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.api.dependencies import get_tts_engine_manager, get_database_manager, get_tts_engine
+from app.api.dependencies import (
+    get_tts_engine_manager,
+    get_database_manager,
+    get_tts_engine,
+)
 from app.api.routes import health, tts
 from app.core.config import settings
 from app.core.exceptions import TTSAPIException
@@ -83,24 +87,38 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 # Add CORS middleware
 def get_cors_origins():
     """Parse CORS origins from comma-separated string."""
     if settings.cors_origins == "*":
         return ["*"]
-    return [origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()]
+    return [
+        origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()
+    ]
+
 
 def get_cors_methods():
     """Parse CORS methods from comma-separated string."""
     if settings.cors_allow_methods == "*":
         return ["*"]
-    return [method.strip() for method in settings.cors_allow_methods.split(",") if method.strip()]
+    return [
+        method.strip()
+        for method in settings.cors_allow_methods.split(",")
+        if method.strip()
+    ]
+
 
 def get_cors_headers():
     """Parse CORS headers from comma-separated string."""
     if settings.cors_allow_headers == "*":
         return ["*"]
-    return [header.strip() for header in settings.cors_allow_headers.split(",") if header.strip()]
+    return [
+        header.strip()
+        for header in settings.cors_allow_headers.split(",")
+        if header.strip()
+    ]
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -126,7 +144,9 @@ async def general_exception_handler(request, exc):
     """Handle general exceptions."""
     return JSONResponse(
         status_code=500,
-        content=ErrorResponse(error="Internal server error", detail=str(exc)).model_dump(),
+        content=ErrorResponse(
+            error="Internal server error", detail=str(exc)
+        ).model_dump(),
     )
 
 

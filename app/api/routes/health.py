@@ -4,7 +4,11 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends
 
-from app.api.dependencies import get_database_manager, get_tts_engine, get_tts_engine_manager
+from app.api.dependencies import (
+    get_database_manager,
+    get_tts_engine,
+    get_tts_engine_manager,
+)
 from app.core.config import settings
 from app.models.database_manager import DatabaseManager
 from app.models.schemas import HealthCheckResponse
@@ -19,7 +23,7 @@ router = APIRouter()
     description="Get the health status with detailed checks for all services",
 )
 async def health_check(
-        db_manager: DatabaseManager = Depends(get_database_manager),
+    db_manager: DatabaseManager = Depends(get_database_manager),
 ):
     """Health check endpoint with detailed checks."""
     checks = {}
@@ -48,7 +52,9 @@ async def health_check(
     # Check TTS service
     try:
         tts_service = get_tts_engine()
-        checks["tts_service"] = "healthy" if tts_service.is_initialized else "not_initialized"
+        checks["tts_service"] = (
+            "healthy" if tts_service.is_initialized else "not_initialized"
+        )
     except Exception as e:
         checks["tts_service"] = f"error: {str(e)}"
         overall_status = "unhealthy"
@@ -56,7 +62,9 @@ async def health_check(
     # Check task manager
     try:
         task_mgr = get_tts_engine_manager()
-        checks["task_manager"] = "healthy" if task_mgr.is_initialized else "not_initialized"
+        checks["task_manager"] = (
+            "healthy" if task_mgr.is_initialized else "not_initialized"
+        )
     except Exception as e:
         checks["task_manager"] = f"error: {str(e)}"
         overall_status = "unhealthy"

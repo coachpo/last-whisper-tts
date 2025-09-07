@@ -25,17 +25,17 @@ class TTSEngine:
     """
 
     def __init__(
-            self,
-            voices=None,  # list of azure voice names to choose from
-            language_code: str = "fi-FI",
-            sample_rate_hz: int = 24000,  # RIFF 24k mono PCM
-            speaking_rate: float = 1.0,  # use SSML <prosody rate="...">
-            pitch: float = 0.0,  # use SSML <prosody pitch="...">
-            volume_gain_db: float = 0.0,  # use SSML <prosody volume="...dB">
-            use_ssml: bool = False,  # set True to enable prosody controls
-            # for short sentences you don't need chunking; left here for parity
-            max_chars_per_request: int = 4500,  # Azure limit is 5000 chars
-            device=None,  # for API compatibility (not used for Azure)
+        self,
+        voices=None,  # list of azure voice names to choose from
+        language_code: str = "fi-FI",
+        sample_rate_hz: int = 24000,  # RIFF 24k mono PCM
+        speaking_rate: float = 1.0,  # use SSML <prosody rate="...">
+        pitch: float = 0.0,  # use SSML <prosody pitch="...">
+        volume_gain_db: float = 0.0,  # use SSML <prosody volume="...dB">
+        use_ssml: bool = False,  # set True to enable prosody controls
+        # for short sentences you don't need chunking; left here for parity
+        max_chars_per_request: int = 4500,  # Azure limit is 5000 chars
+        device=None,  # for API compatibility (not used for Azure)
     ):
         logger.info("TTS engine: Initializing Azure Speech client...")
 
@@ -43,9 +43,9 @@ class TTSEngine:
         self.azure_key = getattr(settings, "azure_speech_key", None) or os.getenv(
             "AZURE_SPEECH_KEY"
         )
-        self.azure_region = getattr(
-            settings, "azure_speech_region", None
-        ) or os.getenv("AZURE_SPEECH_REGION")
+        self.azure_region = getattr(settings, "azure_speech_region", None) or os.getenv(
+            "AZURE_SPEECH_REGION"
+        )
 
         if not self.azure_key or not self.azure_region:
             raise RuntimeError(
@@ -60,7 +60,7 @@ class TTSEngine:
         self.volume_gain_db = volume_gain_db
         self.use_ssml = use_ssml
         self.max_chars_per_request = max_chars_per_request
-        
+
         # Device field for API compatibility (not used for Azure API)
         self.device = device or "azure-speech-api"
 

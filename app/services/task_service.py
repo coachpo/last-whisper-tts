@@ -13,7 +13,9 @@ class TaskService:
 
     def __init__(self):
         # Reuse a shared DatabaseManager if one exists
-        self.db_manager = getattr(DatabaseManager, "default_instance", None) or DatabaseManager(settings.database_url)
+        self.db_manager = getattr(
+            DatabaseManager, "default_instance", None
+        ) or DatabaseManager(settings.database_url)
 
     def get_task_by_id(self, task_id: str) -> Task:
         """Get a task by ID, raising exception if not found."""
@@ -27,7 +29,9 @@ class TaskService:
             raise TaskNotFoundException(task_id)
         return task
 
-    def get_all_tasks(self, status: Optional[str] = None, limit: int = 100) -> List[Task]:
+    def get_all_tasks(
+        self, status: Optional[str] = None, limit: int = 100
+    ) -> List[Task]:
         """Get all tasks with optional filtering."""
         # Input validation as per tests
         if limit is None or limit <= 0:

@@ -33,10 +33,14 @@ class Settings(BaseSettings):
     tts_device: Optional[str] = None  # None for auto-detection
     tts_thread_count: int = 1
     tts_supported_languages: list[str] = ["fi"]  # Supported languages for TTS
-    tts_provider: str = "gcp"  # or "azure" or "gcp" TTS provider: 'local', 'azure', or 'gcp'/'google'
+    tts_provider: str = (
+        "gcp"  # or "azure" or "gcp" TTS provider: 'local', 'azure', or 'gcp'/'google'
+    )
 
     # Google Cloud Settings
-    google_application_credentials: Optional[str] = "keys/google-credentials.json"  # Dev: file path, Prod: set via GOOGLE_APPLICATION_CREDENTIALS env var
+    google_application_credentials: Optional[str] = (
+        "keys/google-credentials.json"  # Dev: file path, Prod: set via GOOGLE_APPLICATION_CREDENTIALS env var
+    )
 
     # Azure Settings (optional)
     azure_speech_key: Optional[str] = None
@@ -52,11 +56,13 @@ class Settings(BaseSettings):
     disable_docs: bool = False  # Set to True to disable docs in production
 
     # CORS Settings
-    cors_origins: str = "http://localhost:3000,http://127.0.0.1:3000"  # Comma-separated list of allowed origins
+    cors_origins: str = (
+        "http://localhost:3000,http://127.0.0.1:3000"  # Comma-separated list of allowed origins
+    )
     cors_allow_credentials: bool = True
     cors_allow_methods: str = "*"  # Comma-separated list or "*" for all methods
     cors_allow_headers: str = "*"  # Comma-separated list or "*" for all headers
-    
+
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
 
 
