@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "last-whisper-tts"
+version = "1.0.0"
+description = "A production-grade FastAPI service for Text-to-Speech conversion with multiple TTS providers (Local, Azure, Google Cloud)"
+license = {text = "MIT"}
+authors = [
+    {name = "Last Whisper Team"}
+]
+requires-python = ">=3.8"
+dependencies = [
+    "fastapi~=0.116.1",
+    "uvicorn[standard]~=0.35.0",
+    "pydantic~=2.11.7",
+    "pydantic-settings~=2.10.1",
+    "sqlalchemy~=2.0.43",
+    "google-cloud-texttospeech~=2.27.0",
+    "azure-cognitiveservices-speech~=1.45.0",
+    "torch~=2.8.0",
+    "transformers~=4.55.4",
+    "scipy~=1.16.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+prod = [
+    "gunicorn~=23.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/coachpo/last-whisper-tts"
+Repository = "https://github.com/coachpo/last-whisper-tts"
+Issues = "https://github.com/coachpo/last-whisper-tts/issues"
+
+[project.scripts]
+last-whisper-tts = "run_api:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
